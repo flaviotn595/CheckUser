@@ -17,7 +17,7 @@ class ServiceManager:
         is_created = os.path.exists(self.config)
 
         if not is_created:
-            logger.error('Service not created, please run `%s --create-service`', sys.executable)
+            logger.error('Service not created, please run `%s --create-service`', sys.argv[0])
 
         return is_created
 
@@ -77,7 +77,7 @@ class ServiceManager:
                 'After=network.target\n\n',
                 '[Service]\n',
                 'Type=simple\n',
-                'ExecStart=%s %s --start-server\n' % (sys.executable, os.path.abspath(__file__)),
+                'ExecStart=%s --start-server\n' % sys.argv[0],
                 'Restart=always\n',
                 'User=root\n',
                 'Group=root\n\n',

@@ -35,6 +35,7 @@ function check_update() {
     git reset --hard origin/master
     git pull origin master
 
+    python3 setup.py install
     echo 'Update complete.'
 }
 

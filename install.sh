@@ -15,6 +15,7 @@ function install_checkuser() {
 
     python3 setup.py install
 
+    clear
     read -p 'Porta: ' -e -i 5000 port
     checker --config-port $port --create-service
     service check_user start
@@ -51,6 +52,7 @@ function uninstall_checkuser() {
 }
 
 function console_menu() {
+    clear
     echo 'CheckUser Console Menu'
     echo '[01] - Instalar CheckUser'
     echo '[02] - Atualizar CheckUser'

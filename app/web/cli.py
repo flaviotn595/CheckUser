@@ -15,7 +15,6 @@ base_cli.add_argument(
 
 base_cli.add_argument(
     '--server-port',
-    default=Config().port,
     type=int,
     help='Server port',
 )
@@ -36,6 +35,9 @@ base_cli.add_argument(
 
 def args_handler(args):
     if args.start_server:
+        if args.server_port is None:
+            args.server_port = Config().port
+
         server = ServerManager(
             args.server_host,
             args.server_port,

@@ -17,7 +17,7 @@ function install_checkuser() {
 
     read -p 'Porta: ' -e -i 5000 port
     checker --config-port $port --create-service
-    service checker start
+    service check_user start
 
     echo 'URL: http://'$(curl -s icanhazip.com)':'$port
 }

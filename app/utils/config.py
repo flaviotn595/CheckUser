@@ -2,7 +2,7 @@ import typing as t
 import os
 import json
 
-from ..utils.logger import logger
+from ..utils import logger, base_cli
 
 
 class Config:
@@ -75,3 +75,26 @@ class Config:
     def remove_config() -> None:
         if os.path.exists(Config.PATH_CONFIG):
             os.system('rm -rf %s' % Config.PATH_CONFIG)
+
+
+base_cli.add_argument('--config', action='store_true', help='Show config')
+base_cli.add_argument('--include', nargs='+', help='Campo a ser exibido')
+base_cli.add_argument('--exclude', nargs='+', help='Campo a ser exculdo')
+base_cli.add_argument('--config-port', type=int, help='Porta')
+
+
+def args_handler(args):
+    if args.config:
+        logger.info(Config().config)
+        exit(0)
+
+    if args.include:
+        for name in args.include:
+            Config().include(name)
+
+    if args.exclude:
+        for name in args.exclude:
+            Config().exclude = name
+
+    if args.config_port:
+        Config().port = args.config_port

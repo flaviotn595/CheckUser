@@ -4,10 +4,12 @@ import app.checker.cli as check_user_cli
 import app.service.cli as service_cli
 import app.web.cli as web_cli
 
+from app.utils.config import args_handler as config_args_handler
 from app.utils import base_cli
 
 
 def args_handler(args):
+    config_args_handler(args)
     check_user_cli.args_handler(args)
     service_cli.args_handler(args)
     web_cli.args_handler(args)

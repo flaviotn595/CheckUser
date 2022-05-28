@@ -31,13 +31,18 @@ class Config:
 
     @exclude.setter
     def exclude(self, value: t.List[str]):
-        self.config['exclude'] = value
-        self.save_config()
+        config = self.config
+        config['exclude'] = value
+
+        self.save_config(config)
 
     def include(self, name: str) -> bool:
-        if name in self.exclude:
-            self.exclude.remove(name)
-            self.save_config()
+        config = self.config
+        exclude = config.get('exclude', [])
+
+        if name in exclude:
+            exclude.remove(name)
+            self.save_config(config)
             return True
 
         return False
@@ -48,8 +53,9 @@ class Config:
 
     @port.setter
     def port(self, value: int):
-        self.config['port'] = value
-        self.save_config()
+        config = self.config
+        config['port'] = value
+        self.save_config(config)
 
     @property
     def config(self) -> dict:

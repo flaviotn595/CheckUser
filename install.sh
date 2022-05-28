@@ -16,8 +16,8 @@ function install_checkuser() {
     python3 setup.py install
 
     read -p 'Porta: ' -e -i 5000 port
-    checker --port $port --create-service 
-    checker --
+    checker --config-port $port --create-service
+    service checker start
 
     echo 'URL: http://'$(curl -s icanhazip.com)':'$port
 }

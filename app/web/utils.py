@@ -4,7 +4,10 @@ import socket
 import queue
 import threading
 
+from app.utils import logger
+
 from ..checker import check_user, kill_user
+from ..utils.config import Config
 
 
 class ParserServerRequest:
@@ -37,7 +40,14 @@ class FunctionExecutor:
 
     def execute(self) -> t.Dict[str, t.Any]:
         if self.command.upper() == 'CHECK':
-            return check_user(self.content)
+            data = check_user(self.content)
+
+            for exclude in Config().exclude:
+                if exclude in data:
+                    logger.debug(f'Exclude: {exclude}')
+                    del data[exclude]
+
+            return data
 
         if self.command.upper() == 'KILL':
             return kill_user(self.content)

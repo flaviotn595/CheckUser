@@ -1,4 +1,4 @@
-from ..utils import base_cli
+from ..utils import base_cli, logger, Config
 from ..web import ServerManager
 
 base_cli.add_argument(
@@ -15,7 +15,7 @@ base_cli.add_argument(
 
 base_cli.add_argument(
     '--server-port',
-    default=5000,
+    default=Config().port,
     type=int,
     help='Server port',
 )

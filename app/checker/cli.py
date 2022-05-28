@@ -1,5 +1,6 @@
-from app.utils import base_cli
+import json
 
+from app.utils import base_cli
 from app.checker import check_user, kill_user
 from app.checker import CheckerUserManager
 
@@ -20,8 +21,6 @@ base_cli.add_argument(
 
 def args_handler(args):
     if args.check:
-        import json
-
         print(json.dumps(check_user(args.check), indent=4))
 
     if args.kill:

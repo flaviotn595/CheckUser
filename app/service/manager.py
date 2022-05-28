@@ -1,10 +1,12 @@
 import os
 import sys
 
+from app.utils import logger
+
 
 class ServiceManager:
     CONFIG_SYSTEMD_PATH = '/etc/systemd/system/'
-    CONFIG_SYSTEMD = 'user_check.service'
+    CONFIG_SYSTEMD = 'check_user.service'
 
     @property
     def config(self) -> str:
@@ -12,18 +14,29 @@ class ServiceManager:
 
     @property
     def is_created(self) -> bool:
-        return os.path.exists(self.config)
+        is_created = os.path.exists(self.config)
+
+        if not is_created:
+            logger.error('Service not created, please run `%s --create-service`', sys.executable)
+
+        return is_created
 
     @property
     def is_enabled(self) -> bool:
         return os.system('systemctl is-enabled %s >/dev/null' % self.CONFIG_SYSTEMD) == 0
 
     def status(self) -> str:
+        if not self.is_created:
+            return False
+
         command = 'systemctl status %s' % self.CONFIG_SYSTEMD
         result = os.popen(command).readlines()
         return ''.join(result)
 
-    def start(self):
+    def start(self) -> bool:
+        if not self.is_created:
+            return False
+
         status = self.status()
         if 'Active: active' not in status:
             os.system('systemctl start %s' % self.CONFIG_SYSTEMD)
@@ -32,6 +45,9 @@ class ServiceManager:
         return False
 
     def stop(self):
+        if not self.is_created:
+            return False
+
         status = self.status()
         if 'Active: inactive' not in status:
             os.system('systemctl stop %s' % self.CONFIG_SYSTEMD)
@@ -40,6 +56,9 @@ class ServiceManager:
         return False
 
     def restart(self) -> bool:
+        if not self.is_created:
+            return False
+
         command = 'systemctl restart %s' % self.CONFIG_SYSTEMD
         return os.system(command) == 0
 
@@ -49,15 +68,16 @@ class ServiceManager:
         os.system('rm %s' % self.config)
         os.system('systemctl daemon-reload')
 
-    def create_systemd_config(self):
+    def create_systemd_config(self) -> bool:
+        logger.info('Creating systemd config...')
         config_template = ''.join(
             [
                 '[Unit]\n',
-                'Description=User check service\n',
+                'Description=CheckUser service\n',
                 'After=network.target\n\n',
                 '[Service]\n',
                 'Type=simple\n',
-                'ExecStart=%s %s --run\n' % (sys.executable, os.path.abspath(__file__)),
+                'ExecStart=%s %s --start-server\n' % (sys.executable, os.path.abspath(__file__)),
                 'Restart=always\n',
                 'User=root\n',
                 'Group=root\n\n',
@@ -71,10 +91,13 @@ class ServiceManager:
             try:
                 with open(config_path, 'w') as f:
                     f.write(config_template)
-            except PermissionError:
-                return
 
-            os.system('systemctl daemon-reload >/dev/null')
+                os.system('systemctl daemon-reload >/dev/null')
+                logger.info('Systemd config created.')
+            except PermissionError:
+                logger.error('Permission denied')
+
+        return self.is_created
 
     def enable_auto_start(self) -> bool:
         if not self.is_enabled:
@@ -89,5 +112,9 @@ class ServiceManager:
         return not self.is_enabled
 
     def create_service(self) -> bool:
-        self.create_systemd_config()
-        return self.is_created
+        if self.create_systemd_config():
+            self.enable_auto_start()
+
+            return True
+
+        return False

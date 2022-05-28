@@ -2,6 +2,7 @@ import socket
 
 from threading import Thread
 from .utils import ThreadPool
+from ..utils import logger
 
 
 class Server:
@@ -23,8 +24,9 @@ class Server:
     def run(self) -> None:
         self.socket.bind((self.host, self.port))
         self.socket.listen(5)
-
         self.is_running = True
+
+        logger.info(f'Server is running on {self.host}:{self.port}')
 
         try:
             while self.is_running:

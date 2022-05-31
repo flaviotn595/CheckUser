@@ -81,7 +81,7 @@ class WorkerThread(threading.Thread):
                     continue
 
                 response_data = 'HTTP/1.1 200 OK\r\n Content-Type: application/json\r\n\r\n'
-                response_data += json.dumps(self.parse_request(data))
+                response_data += json.dumps(self.parse_request(data), indent=4)
 
                 client.send(response_data.encode('utf-8'))
                 client.close()

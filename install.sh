@@ -25,6 +25,7 @@ function install_checkuser() {
     service check_user start
 
     echo 'URL: http://'$(curl -s icanhazip.com)':'$port
+    read
 }
 
 function check_update() {

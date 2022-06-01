@@ -43,7 +43,7 @@ function install_checkuser() {
 function check_update() {
     if ! [ -d CheckUser ]; then
         echo 'CheckUser nao esta instalado.'
-        exit 1
+        read
     fi
 
     echo 'Verificando atualizacoes...'
@@ -55,6 +55,7 @@ function check_update() {
 
     python3 setup.py install
     echo 'CheckUser atualizado com sucesso.'
+    read
 }
 
 function uninstall_checkuser() {

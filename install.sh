@@ -31,7 +31,7 @@ function install_checkuser() {
 
     clear
     read -p 'Porta: ' -e -i 5000 port
-    checker --config-port $port --create-service
+    checkuser --config-port $port --create-service
     service check_user start
 
     echo 'CheckUser instalado com sucesso.'
@@ -43,7 +43,7 @@ function install_checkuser() {
 function check_update() {
     if ! [ -d CheckUser ]; then
         echo 'CheckUser nao esta instalado.'
-        read
+        return 1
     fi
 
     echo 'Verificando atualizacoes...'
@@ -64,15 +64,15 @@ function uninstall_checkuser() {
     [[ -d CheckUser ]] && rm -rf CheckUser
 
     [[ -f /usr/bin/checker ]] && {
-        service checker stop
+        service check_user stop
         /usr/bin/checker --uninstall
         rm /usr/bin/checker
     }
 
-    [[ -f /usr/local/bin/checker ]] && {
-        service checker stop
-        /usr/local/bin/checker --remove-service
-        rm /usr/local/bin/checker
+    [[ -f /usr/local/bin/checkuser ]] && {
+        service check_user stop
+        /usr/local/bin/checkuser --remove-service
+        rm /usr/local/bin/checkuser
     }
 }
 

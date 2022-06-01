@@ -1,8 +1,8 @@
 import json
 
-from app.utils import base_cli
-from app.checker import check_user, kill_user
-from app.checker import CheckerUserManager
+from checkuser.utils import base_cli
+from checkuser.checker import check_user, kill_user
+from checkuser.checker import CheckerUserManager
 
 base_cli.add_argument(
     '--check',

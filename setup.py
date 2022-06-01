@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from app import __version__, __author__, __email__
+from checkuser import __version__, __author__, __email__
 
 PACKAGES = find_packages()
 REQUIREMENTS = open('requirements.txt').read().splitlines()
@@ -23,6 +23,6 @@ setup(name='CheckerUser',
       install_requires=REQUIREMENTS,
       entry_points={
           'console_scripts': [
-              'checker = app.__main__:main',
+              'checkuser = app.__main__:main',
           ],
       })

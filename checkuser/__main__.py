@@ -1,11 +1,11 @@
 import sys
 
-import app.checker.cli as check_user_cli
-import app.service.cli as service_cli
-import app.web.cli as web_cli
+import checkuser.checker.cli as check_user_cli
+import checkuser.service.cli as service_cli
+import checkuser.web.cli as web_cli
 
-from app.utils.config import args_handler as config_args_handler
-from app.utils import base_cli
+from checkuser.utils.config import args_handler as config_args_handler
+from checkuser.utils import base_cli
 
 
 def args_handler(args):

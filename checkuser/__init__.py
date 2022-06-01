@@ -1,12 +1,12 @@
-from app.checker import check_user, kill_user
-from app.checker import CheckerUserManager
+from checkuser.checker import check_user, kill_user
+from checkuser.checker import CheckerUserManager
 
-from app.checker.ovpn import OpenVPNManager
-from app.checker.ssh import SSHManager
+from checkuser.checker.ovpn import OpenVPNManager
+from checkuser.checker.ssh import SSHManager
 
-from app.web import Server, ServerManager
+from checkuser.web import Server, ServerManager
 
-from app.utils import base_cli
+from checkuser.utils import base_cli
 
 __version__ = '2.1.1'
 __author__ = 'Glemison C. Dutra'

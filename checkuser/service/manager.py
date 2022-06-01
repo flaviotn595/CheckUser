@@ -1,7 +1,7 @@
 import os
 import sys
 
-from app.utils import logger
+from checkuser.utils import logger
 
 
 class ServiceManager:

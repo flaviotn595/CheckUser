@@ -9,6 +9,11 @@ if ! [ -x "$(command -v git)" ]; then
     sudo apt-get install git -y 1>/dev/null 2>/dev/null
 
     echo 'Git instalado com sucesso.'
+
+    if ! [ -x "$(command -v git)" ]; then
+        echo 'Erro: git nao esta instalado.' >&2
+        exit 1
+    fi
 fi
 
 function install_checkuser() {
@@ -19,11 +24,18 @@ function install_checkuser() {
 
     python3 setup.py install
 
+    if ! [ -x "$(command -v checkuser)" ]; then
+        echo 'Erro: CheckUser nao esta instalado.' >&2
+        exit 1
+    fi
+
     clear
     read -p 'Porta: ' -e -i 5000 port
     checker --config-port $port --create-service
     service check_user start
 
+    echo 'CheckUser instalado com sucesso.'
+    echo 'Execute: checkuser --help'
     echo 'URL: http://'$(curl -s icanhazip.com)':'$port
     read
 }

@@ -10,7 +10,7 @@ class CheckerUserManager:
     def __init__(self, username: str):
         self.username = username
         self.ssh_manager = SSHManager()
-        # self.openvpn_manager = OpenVPNManager()
+        self.openvpn_manager = OpenVPNManager()
 
     def get_expiration_date(self) -> t.Optional[str]:
         command = 'chage -l %s' % self.username
@@ -32,7 +32,7 @@ class CheckerUserManager:
     def get_connections(self) -> int:
         return self.ssh_manager.count_connections(
             self.username
-        )
+        ) + self.openvpn_manager.count_connection_from_manager(username=self.username)
 
     def get_time_online(self) -> t.Optional[str]:
         command = 'ps -u %s -o etime --no-headers' % self.username

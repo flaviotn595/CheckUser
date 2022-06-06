@@ -21,7 +21,7 @@ base_cli.add_argument(
 
 base_cli.add_argument(
     '--server-num-workers',
-    default=3,
+    default=2,
     type=int,
     help='Server number of workers',
 )

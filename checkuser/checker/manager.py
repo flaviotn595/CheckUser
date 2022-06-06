@@ -1,5 +1,5 @@
 import typing as t
-import os
+import os, subprocess
 
 from datetime import datetime
 from .ovpn import OpenVPNManager
@@ -13,15 +13,19 @@ class CheckerUserManager:
         self.openvpn_manager = OpenVPNManager()
 
     def get_expiration_date(self) -> t.Optional[str]:
-        command = 'chage -l %s' % self.username
-        result = os.popen(command).readlines()
+        try:
+            chage = subprocess.Popen(('chage', '-l', self.username), stdout=subprocess.PIPE)
+            grep = subprocess.Popen(('grep', 'account expires'), stdin=chage.stdout, stdout=subprocess.PIPE)
+            cut = subprocess.Popen('cut -d : -f2'.split(), stdin=grep.stdout, stdout=subprocess.PIPE)
+            output = cut.communicate()[0].strip().decode()
 
-        for line in result:
-            line = list(map(str.strip, line.split(':')))
-            if line[0].lower() == 'account expires' and line[1] != 'never':
-                return datetime.strptime(line[1], '%b %d, %Y').strftime('%d/%m/%Y')
+            if not output or output == 'never':
+                return None
 
-        return None
+            return datetime.strptime(output, '%b %d, %Y').strftime('%d/%m/%Y')
+
+        except subprocess.CalledProcessError as e:
+            return None
 
     def get_expiration_days(self, date: str) -> int:
         if not isinstance(date, str) or date.lower() == 'never' or not isinstance(date, str):

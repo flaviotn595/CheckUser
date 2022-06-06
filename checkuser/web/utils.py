@@ -60,6 +60,7 @@ class WorkerThread(threading.Thread):
         super(WorkerThread, self).__init__()
         self.queue = queue
         self.daemon = True
+        self.name = 'WorkerThread ' + str(self.ident)
 
         self.is_running = False
 

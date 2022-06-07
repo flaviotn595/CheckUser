@@ -28,7 +28,7 @@ class CheckerUserManager:
             return None
 
     def get_expiration_days(self, date: str) -> int:
-        if not isinstance(date, str) or date.lower() == 'never' or not isinstance(date, str):
+        if not isinstance(date, str) or date.lower() == 'never':
             return -1
 
         return (datetime.strptime(date, '%d/%m/%Y') - datetime.now()).days

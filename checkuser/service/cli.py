@@ -29,4 +29,4 @@ def args_handler(args):
         service_manager.restart()
 
     if args.status:
-        service_manager.status()
+        print(service_manager.status())

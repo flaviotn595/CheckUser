@@ -31,6 +31,9 @@ class Config:
 
     @exclude.setter
     def exclude(self, value: t.List[str]):
+        if isinstance(value, str):
+            value = [value]
+
         config = self.config
         config['exclude'] = value
 

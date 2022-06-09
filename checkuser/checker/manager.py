@@ -1,5 +1,6 @@
 import typing as t
-import os, subprocess
+import os
+import subprocess
 
 from datetime import datetime
 from .ovpn import OpenVPNManager
@@ -14,9 +15,12 @@ class CheckerUserManager:
 
     def get_expiration_date(self) -> t.Optional[str]:
         try:
-            chage = subprocess.Popen(('chage', '-l', self.username), stdout=subprocess.PIPE)
-            grep = subprocess.Popen(('grep', 'Account expires'), stdin=chage.stdout, stdout=subprocess.PIPE)
-            cut = subprocess.Popen('cut -d : -f2'.split(), stdin=grep.stdout, stdout=subprocess.PIPE)
+            chage = subprocess.Popen(
+                ('chage', '-l', self.username), stdout=subprocess.PIPE)
+            grep = subprocess.Popen(
+                ('grep', 'Account expires'), stdin=chage.stdout, stdout=subprocess.PIPE)
+            cut = subprocess.Popen(
+                'cut -d : -f2'.split(), stdin=grep.stdout, stdout=subprocess.PIPE)
             output = cut.communicate()[0].strip().decode()
 
             if not output or output == 'never':
@@ -34,9 +38,14 @@ class CheckerUserManager:
         return (datetime.strptime(date, '%d/%m/%Y') - datetime.now()).days
 
     def get_connections(self) -> int:
-        return self.ssh_manager.count_connections(
-            self.username
-        ) + self.openvpn_manager.count_connection_from_manager(username=self.username)
+        count = 0
+
+        if self.openvpn_manager.openvpn_is_running():
+            count += self.openvpn_manager.count_connection_from_manager(
+                self.username)
+
+        count += self.ssh_manager.count_connections(self.username)
+        return count
 
     def get_time_online(self) -> t.Optional[str]:
         command = 'ps -u %s -o etime --no-headers' % self.username

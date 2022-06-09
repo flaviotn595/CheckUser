@@ -1,6 +1,7 @@
 import os
 import socket
 
+
 class OpenVPNManager:
     def __init__(self, port: int = 7505):
         self.port = port
@@ -10,6 +11,20 @@ class OpenVPNManager:
         self.log_path = '/var/log/openvpn/'
 
         self.start_manager()
+
+    @staticmethod
+    def openvpn_is_running() -> bool:
+        status = OpenVPNManager.openvpn_is_installed()
+
+        if status:
+            data = os.popen('service openvpn status').read().strip()
+            status = data.find('Active: active') > -1
+
+        return status
+
+    @staticmethod
+    def openvpn_is_installed() -> bool:
+        return os.path.exists('/etc/openvpn/') and os.path.exists('/etc/openvpn/server.conf')
 
     @property
     def config(self) -> str:
@@ -68,7 +83,9 @@ class OpenVPNManager:
             with open(self.log, 'r') as f:
                 data = f.read()
                 count = data.count(username)
+
                 return count // 2 if count > 0 else 0
+
         return 0
 
     def count_connections(self, username: str) -> int:
@@ -79,4 +96,3 @@ class OpenVPNManager:
         soc = self.create_connection()
         soc.send(b'kill %s\n' % username.encode())
         soc.close()
-

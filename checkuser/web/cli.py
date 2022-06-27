@@ -38,6 +38,11 @@ def args_handler(args):
         if args.server_port is None:
             args.server_port = Config().port
 
+        try:
+            __import__('daemon').DaemonContext().open()
+        except ImportError:
+            logger.warning('Daemon is not supported')
+
         server = ServerManager(
             args.server_host,
             args.server_port,

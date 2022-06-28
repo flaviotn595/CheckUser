@@ -17,7 +17,7 @@ if ! [ -x "$(command -v git)" ]; then
 fi
 
 function install_checkuser() {
-    echo 'Instalando CheckUser...'
+    echo 'Instalando CheckUser... ⏳'
 
     git clone $url
     cd CheckUser
@@ -34,7 +34,7 @@ function install_checkuser() {
     checkuser --config-port $port --create-service
     service check_user start
 
-    echo 'CheckUser instalado com sucesso.'
+    echo 'CheckUser instalado com sucesso. ✅'
     echo 'Execute: checkuser --help'
     echo 'URL: http://'$(curl -s icanhazip.com)':'$port
     read
@@ -42,11 +42,11 @@ function install_checkuser() {
 
 function check_update() {
     if ! [ -d CheckUser ]; then
-        echo 'CheckUser nao esta instalado.'
+        echo 'CheckUser nao esta instalado. ✖️'
         return 1
     fi
 
-    echo 'Verificando atualizacoes...'
+    echo 'Verificando atualizacoes... ⏳'
     cd CheckUser
 
     git fetch --all
@@ -59,7 +59,7 @@ function check_update() {
 }
 
 function uninstall_checkuser() {
-    echo 'Desinstalando CheckUser...'
+    echo 'Desinstalando CheckUser... 🫤'
 
     [[ -d CheckUser ]] && rm -rf CheckUser
 
@@ -79,9 +79,9 @@ function uninstall_checkuser() {
 function console_menu() {
     clear
     echo 'CHECKUSER MENU'
-    echo '[01] - Instalar CheckUser'
-    echo '[02] - Atualizar CheckUser'
-    echo '[03] - Desinstalar CheckUser'
+    echo '[01] - Instalar CheckUser 📥'
+    echo '[02] - Atualizar CheckUser ⏳'
+    echo '[03] - Desinstalar CheckUser 📤'
     echo '[00] - Sair'
 
     read -p 'Escolha uma opção: ' option
@@ -104,7 +104,7 @@ function console_menu() {
         exit 0
         ;;
     *)
-        echo 'Opção inválida.'
+        echo 'Opção inválida 🤡'
         read -p 'Pressione enter para continuar...'
         console_menu
         ;;
